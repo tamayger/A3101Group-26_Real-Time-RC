@@ -1,31 +1,147 @@
+
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>LiveLap Leaderboard</title>
+    <title>LiveLap - Drift Time Trial</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
+    <!-- =========================
+         NAVIGATION
+    ========================== -->
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#data-entry">Results</a>
+    </nav>
+
+
+    <!-- =========================
+         MAIN CONTAINER
+    ========================== -->
+
     <div class="container">
-        <!-- Header Section -->
+
+        <!-- HEADER -->
+
         <div class="header">
             <h1>DRIFT TIME TRIAL</h1>
             <h2>SEP 2026 LEADERBOARDS</h2>
         </div>
 
-        <!-- Main Leaderboard Table -->
-        <table id="leaderboard">
-            <thead>
-                <tr>
-                    <th>RANK 1 </th>
-                    <th>TIME</th>
-                    <th>NAME</th>
-                    <th>DATE</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data rows will go here -->
-            </tbody>
-        </table>
-        
+
+        <!-- =========================
+             DATA ENTRY
+        ========================== -->
+
+        <section id="data-entry">
+
+            <h2>DATA ENTRY</h2>
+
+            <form id="raceForm">
+
+                <!-- Driver Name -->
+
+                <label for="name">
+                    Driver Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter driver name"
+                    required
+                >
+
+
+                <!-- Time -->
+
+                <label for="time">
+                    Time
+                </label>
+
+                <input
+                    type="text"
+                    id="time"
+                    placeholder="00:45.21"
+                    required
+                >
+
+
+                <!-- Date -->
+
+                <label for="date">
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                    required
+                >
+
+
+                <!-- Submit -->
+
+                <button type="submit">
+                    Add Result
+                </button>
+
+            </form>
+
+            <p id="message"></p>
+
+        </section>
+
+
+        <!-- =========================
+             LEADERBOARD
+        ========================== -->
+
+        <section id="leaderboard">
+
+            <div class="header">
+                <h2>LEADERBOARD</h2>
+            </div>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>RANK</th>
+                        <th>TIME</th>
+                        <th>NAME</th>
+                        <th>DATE</th>
+                    </tr>
+
+                </thead>
+
+
+                <!-- JavaScript will add rows here -->
+
+                <tbody id="leaderboardBody">
+
+                </tbody>
+
+            </table>
+
+        </section>
+
     </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script src="script.js"></script>
+
 </body>
+
 </html>
