@@ -1,0 +1,24 @@
+{
+  "name": "a3101group-26_real-time-rc",
+  "version": "1.0.0",
+  "description": "Template | MO-IT161 | Application Development Workflow Worksheet | <A3101 > Group <26> \r https://docs.google.com/spreadsheets/d/1iUyWg36QpM2X0yW6WAh0VGKIu0lDrgFqWg09OUgTDbw/edit?usp=sharing\r AI Use Statement | MO-IT161 WebSys |  <A3101 > Group <26>\r https://docs.google.com/document/d/19dcvzPnw1qQBOc0uKe4zs28718Dlk8O6pGhdIxkrCzg/edit?usp=sharing",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamayger/A3101Group-26_Real-Time-RC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tamayger/A3101Group-26_Real-Time-RC/issues"
+  },
+  "homepage": "https://github.com/tamayger/A3101Group-26_Real-Time-RC#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
