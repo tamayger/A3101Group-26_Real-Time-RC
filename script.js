@@ -106,29 +106,48 @@ function convertTime(time) {
 }
 
 renderLeaderboard();
-// Fetch data from the Express backend
-function loadLeaderboard() {
-    fetch('/api/leaderboard')
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(data) {
-            var tbody = document.getElementById("leaderboardBody");
-            tbody.innerHTML = "";
+// Load backend results without losing browser-saved entries or active search filters.
+async function loadLeaderboard() {
+    if (!leaderboardBody) {
+        return;
+    }
 
-            for (var i = 0; i < data.length; i++) {
-                var row = "<tr>" +
-                    "<td class='rank'>" + (i + 1) + "</td>" +
-                    "<td class='time'>" + data[i].time + "</td>" +
-                    "<td class='name'>" + data[i].name + "</td>" +
-                    "<td>" + data[i].date + "</td>" +
-                "</tr>";
-                tbody.innerHTML += row;
-            }
-        })
-        .catch(function(error) {
-            console.error("Error loading data:", error);
-        });
+    try {
+        const response = await fetch("/api/leaderboard");
+        if (!response.ok) {
+            throw new Error(`Leaderboard request failed (${response.status}).`);
+        }
+
+        const serverResults = await response.json();
+        if (!Array.isArray(serverResults)) {
+            throw new Error("The leaderboard response must be an array.");
+        }
+
+        results = mergeResults(serverResults, results);
+        renderLeaderboard();
+    } catch (error) {
+        console.error("Unable to load leaderboard data from the server:", error);
+    }
 }
 
-window.onload = loadLeaderboard;
+function mergeResults(serverResults, browserResults) {
+    const mergedResults = new Map();
+
+    [...serverResults, ...browserResults].forEach((result) => {
+        if (!result || !result.name || !result.time || !result.date) {
+            return;
+        }
+
+        const key = [result.name, result.time, result.date]
+            .map((value) => String(value).trim().toLowerCase())
+            .join("|");
+
+        if (!mergedResults.has(key)) {
+            mergedResults.set(key, result);
+        }
+    });
+
+    return [...mergedResults.values()];
+}
+
+loadLeaderboard();
