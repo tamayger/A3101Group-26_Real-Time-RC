@@ -1,13 +1,16 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LiveLap - Drift Time Trial</title>
     <link rel="stylesheet" href="style.css">
+    <script src="lap-time-input.js" defer></script>
 </head>
 
-<body>
+<body class="leaderboard-page">
 
     <!-- =========================
          NAVIGATION
@@ -16,7 +19,7 @@
     <nav>
         <a href="index.html">Home</a>
         <a href="#leaderboard">Leaderboard</a>
-        <a href="#data-entry">Results</a>
+        <a href="The Data Entry.html">Results</a>
     </nav>
 
 
@@ -30,7 +33,7 @@
 
         <div class="header">
             <h1>DRIFT TIME TRIAL</h1>
-            <h2>SEP 2026 LEADERBOARDS</h2>
+            <h2>OCTOBER 2026 LEADERBOARDS</h2>
         </div>
 
 
@@ -41,55 +44,31 @@
         <section id="data-entry">
 
             <h2>DATA ENTRY</h2>
+            <p class="entry-description">Record a driver’s lap time, event, and run date.</p>
 
             <form id="raceForm">
+                <div class="leaderboard-field">
+                    <label for="name">Driver name</label>
+                    <input type="text" id="name" placeholder="Enter driver name" autocomplete="name" required>
+                </div>
 
-                <!-- Driver Name -->
+                <div class="leaderboard-field">
+                    <label for="time">Lap time</label>
+                    <input type="text" id="time" placeholder="MM:SS.hh" inputmode="numeric" autocomplete="off" required>
+                    <small>Type digits only, e.g. 012345 becomes 01:23.45.</small>
+                </div>
 
-                <label for="name">
-                    Driver Name
-                </label>
+                <div class="leaderboard-field">
+                    <label for="event">Event name</label>
+                    <input type="text" id="event" placeholder="e.g. October Time Trial" required>
+                </div>
 
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="Enter driver name"
-                    required
-                >
+                <div class="leaderboard-field">
+                    <label for="date">Run date</label>
+                    <input type="date" id="date" required>
+                </div>
 
-
-                <!-- Time -->
-
-                <label for="time">
-                    Time
-                </label>
-
-                <input
-                    type="text"
-                    id="time"
-                    placeholder="00:45.21"
-                    required
-                >
-
-
-                <!-- Date -->
-
-                <label for="date">
-                    Date
-                </label>
-
-                <input
-                    type="date"
-                    id="date"
-                    required
-                >
-
-
-                <!-- Submit -->
-
-                <button type="submit">
-                    Add Result
-                </button>
+                <button type="submit">Add result</button>
 
             </form>
 

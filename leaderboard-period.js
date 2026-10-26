@@ -9,5 +9,5 @@
         month: "long",
         year: "numeric"
     }).format(new Date());
-    leaderboardPeriod.textContent = `${currentMonthAndYear} LEADERBOARDS`.toUpperCase();
+    leaderboardPeriod.textContent = `${currentMonthAndYear} Leaderboards`.toUpperCase();
 })();
