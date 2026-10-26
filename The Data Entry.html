@@ -4,6 +4,7 @@
 <head>
     <title>LiveLap Data Entry</title>
     <link rel="stylesheet" href="style.css">
+    <script src="lap-time-input.js" defer></script>
 </head>
 
 <body>
@@ -35,9 +36,11 @@
             <input 
                 type="text" 
                 id="time" 
-                placeholder="00:45.21"
+                placeholder="MM:SS.hh"
+                inputmode="numeric"
                 required
             >
+            <small>Type digits only, e.g. 012345 becomes 01:23.45.</small>
 
             <label for="date">Date</label>
             <input 
