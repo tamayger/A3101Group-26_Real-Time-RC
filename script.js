@@ -106,3 +106,29 @@ function convertTime(time) {
 }
 
 renderLeaderboard();
+// Fetch data from the Express backend
+function loadLeaderboard() {
+    fetch('/api/leaderboard')
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            var tbody = document.getElementById("leaderboardBody");
+            tbody.innerHTML = "";
+
+            for (var i = 0; i < data.length; i++) {
+                var row = "<tr>" +
+                    "<td class='rank'>" + (i + 1) + "</td>" +
+                    "<td class='time'>" + data[i].time + "</td>" +
+                    "<td class='name'>" + data[i].name + "</td>" +
+                    "<td>" + data[i].date + "</td>" +
+                "</tr>";
+                tbody.innerHTML += row;
+            }
+        })
+        .catch(function(error) {
+            console.error("Error loading data:", error);
+        });
+}
+
+window.onload = loadLeaderboard;
