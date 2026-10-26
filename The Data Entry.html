@@ -1,13 +1,14 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>LiveLap Data Entry</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiveLap Results</title>
     <link rel="stylesheet" href="style.css">
-    <script src="lap-time-input.js" defer></script>
 </head>
 
-<body>
+<body class="results-page">
 
     <nav>
         <a href="index.html">Home</a>
@@ -19,43 +20,68 @@
 
         <div class="header">
             <h1>DRIFT TIME TRIAL</h1>
-            <h2>DATA ENTRY</h2>
+            <h2>RESULTS</h2>
         </div>
 
-        <form id="raceForm">
+        <section class="podium-section" aria-labelledby="podiumHeading">
+            <h2 id="podiumHeading">Top 3 Drivers</h2>
+            <div class="podium-grid">
+                <article class="podium-card podium-first">
+                    <span class="podium-rank">1st Place</span>
+                    <h3 id="podiumFirstName">Awaiting driver</h3>
+                    <p>Best time <strong id="podiumFirstTime">—</strong></p>
+                </article>
+                <article class="podium-card podium-second">
+                    <span class="podium-rank">2nd Place</span>
+                    <h3 id="podiumSecondName">Awaiting driver</h3>
+                    <p>Best time <strong id="podiumSecondTime">—</strong></p>
+                </article>
+                <article class="podium-card podium-third">
+                    <span class="podium-rank">3rd Place</span>
+                    <h3 id="podiumThirdName">Awaiting driver</h3>
+                    <p>Best time <strong id="podiumThirdTime">—</strong></p>
+                </article>
+            </div>
+        </section>
 
-            <label for="name">Driver Name</label>
-            <input 
-                type="text" 
-                id="name" 
-                placeholder="Enter driver name"
-                required
-            >
-
-            <label for="time">Time</label>
-            <input 
-                type="text" 
-                id="time" 
-                placeholder="MM:SS.hh"
-                inputmode="numeric"
-                required
-            >
-            <small>Type digits only, e.g. 012345 becomes 01:23.45.</small>
-
-            <label for="date">Date</label>
-            <input 
-                type="date" 
-                id="date"
-                required
-            >
-
-            <button type="submit">
-                Add Result
-            </button>
-
-        </form>
-
-        <p id="message"></p>
+        <section class="results-table-panel" aria-labelledby="resultsHeading">
+            <div class="results-table-heading">
+                <div>
+                    <h2 id="resultsHeading">Recorded Results</h2>
+                    <p>Ranked from the fastest lap time to the slowest.</p>
+                </div>
+            </div>
+            <div class="results-filter-bar">
+                <div class="results-filter-field">
+                    <label for="resultNameFilter">Driver name</label>
+                    <input type="search" id="resultNameFilter" placeholder="Search drivers..." autocomplete="off">
+                </div>
+                <div class="results-filter-field">
+                    <label for="resultDateFilter">Run date</label>
+                    <input type="date" id="resultDateFilter">
+                </div>
+                <div class="results-filter-field">
+                    <label for="resultEventFilter">Event</label>
+                    <select id="resultEventFilter">
+                        <option value="">All events</option>
+                    </select>
+                </div>
+            </div>
+            <div class="results-table-scroll">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Driver Name</th>
+                            <th>Best Time</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsLeaderboardBody"></tbody>
+                </table>
+            </div>
+        </section>
 
     </div>
 
