@@ -5,17 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LiveLap Leaderboard</title>
     <link rel="stylesheet" href="style.css">
-    <script src="leaderboard-period.js" defer></script>
     <script src="lap-time-input.js" defer></script>
-    <script src="script.js" defer></script>
 </head>
 
 <body class="home-page">
 
     <nav>
-        <a href="index.html">Home</a>
-        <a href="table-skeleton.html">Leaderboard</a>
-        <a href="The Data Entry.html">Results</a>
+        <a href="/">Home</a>
+        <a href="/leaderboard">Leaderboard</a>
+        <a href="/results">Results</a>
     </nav>
 
     <div class="container">
@@ -23,17 +21,19 @@
         <!-- Header Section -->
         <div class="header">
             <h1>DRIFT TIME TRIAL</h1>
-            <h2 id="leaderboardPeriod">OCTOBER 2026 LEADERBOARDS</h2>
+            <h2>{{leaderboardPeriod}}</h2>
         </div>
 
-        <!-- Search bar for JS implementation -->
-        <div class="search-panel">
+        <!-- Search is submitted to the server and rendered with the page. -->
+        <form class="search-panel" method="get" action="/">
             <label for="searchInput">Find a driver</label>
-            <input type="search" id="searchInput" placeholder="Type a driver name..." autocomplete="off">
-        </div>
+            <input type="search" id="searchInput" name="driver" value="{{driverFilter}}" placeholder="Type a driver name..." autocomplete="off">
+            <button class="search-submit" type="submit">Search</button>
+        </form>
 
         <!-- Admin Form to Add New Times -->
-        <form class="admin-panel" id="timeEntryForm">
+        <form class="admin-panel" id="timeEntryForm" method="post" action="/times">
+            <input type="hidden" name="returnTo" value="/">
             <div class="admin-panel-heading">
                 <h3>Add a lap time</h3>
                 <p>Enter the driver and run details below.</p>
@@ -41,27 +41,27 @@
             <div class="admin-fields">
                 <div class="input-group">
                     <label for="newName">Driver name</label>
-                    <input type="text" id="newName" placeholder="e.g. Alex Rivera" autocomplete="name" required>
+                    <input type="text" id="newName" name="name" placeholder="e.g. Alex Rivera" autocomplete="name" required>
                     <small aria-hidden="true">&nbsp;</small>
                 </div>
                 <div class="input-group">
                     <label for="newTime">Lap time</label>
-                    <input type="text" id="newTime" placeholder="MM:SS.hh" inputmode="numeric" autocomplete="off" required>
+                    <input type="text" id="newTime" name="time" placeholder="MM:SS.hh" inputmode="numeric" autocomplete="off" required>
                     <small>Type digits only, e.g. 012345 becomes 01:23.45.</small>
                 </div>
                 <div class="input-group">
                     <label for="newEvent">Event name</label>
-                    <input type="text" id="newEvent" placeholder="e.g. October Time Trial" required>
+                    <input type="text" id="newEvent" name="eventName" placeholder="e.g. October Time Trial" required>
                     <small>Name this race event.</small>
                 </div>
                 <div class="input-group">
                     <label for="newDate">Run date</label>
-                    <input type="date" id="newDate" required>
+                    <input type="date" id="newDate" name="date" required>
                     <small>Select the date of the run.</small>
                 </div>
                 <button id="addTimeBtn" type="submit">Submit time</button>
             </div>
-            <p id="timeEntryMessage" class="form-message" aria-live="polite"></p>
+            <p class="form-message" aria-live="polite">{{formMessage}}</p>
         </form>
 
         <!-- Main Leaderboard Table -->
@@ -77,7 +77,7 @@
             </thead>
 
             <tbody id="leaderboardBody">
-                <!-- Data will be loaded here by Express -->
+                {{leaderboardRows}}
             </tbody>
 
         </table>

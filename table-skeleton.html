@@ -17,9 +17,9 @@
     ========================== -->
 
     <nav>
-        <a href="index.html">Home</a>
-        <a href="#leaderboard">Leaderboard</a>
-        <a href="The Data Entry.html">Results</a>
+        <a href="/">Home</a>
+        <a href="/leaderboard">Leaderboard</a>
+        <a href="/results">Results</a>
     </nav>
 
 
@@ -33,7 +33,7 @@
 
         <div class="header">
             <h1>DRIFT TIME TRIAL</h1>
-            <h2>OCTOBER 2026 LEADERBOARDS</h2>
+            <h2>{{leaderboardPeriod}}</h2>
         </div>
 
 
@@ -46,33 +46,34 @@
             <h2>DATA ENTRY</h2>
             <p class="entry-description">Record a driver’s lap time, event, and run date.</p>
 
-            <form id="raceForm">
+            <form id="raceForm" method="post" action="/times">
+                <input type="hidden" name="returnTo" value="/leaderboard">
                 <div class="leaderboard-field">
                     <label for="name">Driver name</label>
-                    <input type="text" id="name" placeholder="Enter driver name" autocomplete="name" required>
+                    <input type="text" id="name" name="name" placeholder="Enter driver name" autocomplete="name" required>
                 </div>
 
                 <div class="leaderboard-field">
                     <label for="time">Lap time</label>
-                    <input type="text" id="time" placeholder="MM:SS.hh" inputmode="numeric" autocomplete="off" required>
+                    <input type="text" id="time" name="time" placeholder="MM:SS.hh" inputmode="numeric" autocomplete="off" required>
                     <small>Type digits only, e.g. 012345 becomes 01:23.45.</small>
                 </div>
 
                 <div class="leaderboard-field">
                     <label for="event">Event name</label>
-                    <input type="text" id="event" placeholder="e.g. October Time Trial" required>
+                    <input type="text" id="event" name="eventName" placeholder="e.g. October Time Trial" required>
                 </div>
 
                 <div class="leaderboard-field">
                     <label for="date">Run date</label>
-                    <input type="date" id="date" required>
+                    <input type="date" id="date" name="date" required>
                 </div>
 
                 <button type="submit">Add result</button>
 
             </form>
 
-            <p id="message"></p>
+            <p id="message">{{formMessage}}</p>
 
         </section>
 
@@ -84,7 +85,7 @@
         <section id="leaderboard">
 
             <div class="header">
-                <h2>LEADERBOARD</h2>
+                        <h2>LEADERBOARD</h2>
             </div>
 
 
@@ -102,10 +103,8 @@
                 </thead>
 
 
-                <!-- JavaScript will add rows here -->
-
                 <tbody id="leaderboardBody">
-
+                    {{leaderboardRows}}
                 </tbody>
 
             </table>
@@ -114,12 +113,6 @@
 
     </div>
 
-
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
-
-    <script src="script.js"></script>
 
 </body>
 

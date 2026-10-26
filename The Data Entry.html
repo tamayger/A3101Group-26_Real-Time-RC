@@ -11,9 +11,9 @@
 <body class="results-page">
 
     <nav>
-        <a href="index.html">Home</a>
-        <a href="table-skeleton.html">Leaderboard</a>
-        <a href="The Data Entry.html">Results</a>
+        <a href="/">Home</a>
+        <a href="/leaderboard">Leaderboard</a>
+        <a href="/results">Results</a>
     </nav>
 
     <div class="container">
@@ -28,18 +28,18 @@
             <div class="podium-grid">
                 <article class="podium-card podium-first">
                     <span class="podium-rank">1st Place</span>
-                    <h3 id="podiumFirstName">Awaiting driver</h3>
-                    <p>Best time <strong id="podiumFirstTime">—</strong></p>
+                    <h3>{{firstDriverName}}</h3>
+                    <p>Best time <strong>{{firstDriverTime}}</strong></p>
                 </article>
                 <article class="podium-card podium-second">
                     <span class="podium-rank">2nd Place</span>
-                    <h3 id="podiumSecondName">Awaiting driver</h3>
-                    <p>Best time <strong id="podiumSecondTime">—</strong></p>
+                    <h3>{{secondDriverName}}</h3>
+                    <p>Best time <strong>{{secondDriverTime}}</strong></p>
                 </article>
                 <article class="podium-card podium-third">
                     <span class="podium-rank">3rd Place</span>
-                    <h3 id="podiumThirdName">Awaiting driver</h3>
-                    <p>Best time <strong id="podiumThirdTime">—</strong></p>
+                    <h3>{{thirdDriverName}}</h3>
+                    <p>Best time <strong>{{thirdDriverTime}}</strong></p>
                 </article>
             </div>
         </section>
@@ -51,22 +51,22 @@
                     <p>Ranked from the fastest lap time to the slowest.</p>
                 </div>
             </div>
-            <div class="results-filter-bar">
+            <form class="results-filter-bar" method="get" action="/results">
                 <div class="results-filter-field">
                     <label for="resultNameFilter">Driver name</label>
-                    <input type="search" id="resultNameFilter" placeholder="Search drivers..." autocomplete="off">
+                    <input type="search" id="resultNameFilter" name="driver" value="{{driverFilter}}" placeholder="Search drivers..." autocomplete="off">
                 </div>
                 <div class="results-filter-field">
                     <label for="resultDateFilter">Run date</label>
-                    <input type="date" id="resultDateFilter">
+                    <input type="date" id="resultDateFilter" name="date" value="{{dateFilter}}">
                 </div>
                 <div class="results-filter-field">
                     <label for="resultEventFilter">Event</label>
-                    <select id="resultEventFilter">
-                        <option value="">All events</option>
-                    </select>
+                    <select id="resultEventFilter" name="event">{{eventOptions}}</select>
                 </div>
-            </div>
+                <button class="results-filter-submit" type="submit">Filter</button>
+                <a class="results-filter-clear" href="/results">Clear</a>
+            </form>
             <div class="results-table-scroll">
                 <table id="resultsTable">
                     <thead>
@@ -78,14 +78,11 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="resultsLeaderboardBody"></tbody>
+                    <tbody id="resultsLeaderboardBody">{{resultsRows}}</tbody>
                 </table>
             </div>
         </section>
 
     </div>
-
-    <script src="script.js"></script>
-
 </body>
 </html>
