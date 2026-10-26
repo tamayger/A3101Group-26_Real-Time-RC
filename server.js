@@ -19,6 +19,22 @@ app.get('/api/leaderboard', (req, res) => {
     res.json(leaderboard);
 });
 
+// POST route to receive new times from the frontend
+app.post('/api/leaderboard', (req, res) => {
+    const newEntry = {
+        time: req.body.time,
+        name: req.body.name,
+        date: req.body.date
+    };
+    
+    leaderboard.push(newEntry);
+    
+    // Sort the leaderboard by time (fastest first)
+    leaderboard.sort((a, b) => a.time.localeCompare(b.time));
+    
+    res.json({ message: "Time added successfully!" });
+});
+
 app.listen(port, () => {
     console.log("LiveLap server running at http://localhost:" + port);
 });

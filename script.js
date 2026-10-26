@@ -272,3 +272,35 @@ function getSortedResults() {
 renderLeaderboard();
 renderResultsTable();
 renderPodium();
+
+// Send new time to the Express backend
+    document.getElementById("addTimeBtn").addEventListener("click", function() {
+        var nameVal = document.getElementById("newName").value;
+        var timeVal = document.getElementById("newTime").value;
+        var dateVal = document.getElementById("newDate").value;
+
+        if(nameVal === "" || timeVal === "") {
+            alert("Name and Time are required!");
+            return;
+        }
+
+        var payload = { name: nameVal, time: timeVal, date: dateVal };
+
+        fetch('/api/leaderboard', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(result) {
+            // Clear inputs and reload the table
+            document.getElementById("newName").value = "";
+            document.getElementById("newTime").value = "";
+            document.getElementById("newDate").value = "";
+            renderLeaderboard();
+        });
+    });
