@@ -4,52 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LiveLap Results</title>
+    <title>LiveLap — Real-Time Rock Crawling Results</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="results-page">
 
-    <nav>
-        <a href="/">Home</a>
-        <a href="/leaderboard">Leaderboard</a>
-        <a href="/results">Results</a>
+    <nav aria-label="Main navigation">
+        <a class="site-brand" href="/" aria-label="LiveLap home">
+            <span class="brand-mark" aria-hidden="true">LL</span>
+            <span class="brand-copy">LiveLap<small>RC TIME ATTACK</small></span>
+        </a>
+        <div class="nav-links">
+            <a href="/">Timing Table</a>
+            <a href="/results" aria-current="page">Results</a>
+            <a href="/events">Manage Events</a>
+        </div>
+        {{eventSelector}}
     </nav>
 
-    <div class="container">
+    <main class="container">
 
         <div class="header">
-            <h1>DRIFT TIME TRIAL</h1>
+            <h1>LIVELAP</h1>
             <h2>RESULTS</h2>
+            <p class="hero-caption">Review individual lap times and compare driver performance.</p>
         </div>
 
-        <section class="podium-section" aria-labelledby="podiumHeading">
-            <h2 id="podiumHeading">Top 3 Drivers</h2>
-            <div class="podium-grid">
-                <article class="podium-card podium-first">
-                    <span class="podium-rank">1st Place</span>
-                    <h3>{{firstDriverName}}</h3>
-                    <p>Best time <strong>{{firstDriverTime}}</strong></p>
-                </article>
-                <article class="podium-card podium-second">
-                    <span class="podium-rank">2nd Place</span>
-                    <h3>{{secondDriverName}}</h3>
-                    <p>Best time <strong>{{secondDriverTime}}</strong></p>
-                </article>
-                <article class="podium-card podium-third">
-                    <span class="podium-rank">3rd Place</span>
-                    <h3>{{thirdDriverName}}</h3>
-                    <p>Best time <strong>{{thirdDriverTime}}</strong></p>
-                </article>
-            </div>
-        </section>
-
-        <section class="results-table-panel" aria-labelledby="resultsHeading">
+        <section id="lapResults" class="results-table-panel" aria-labelledby="resultsHeading">
             <div class="results-table-heading">
                 <div>
-                    <h2 id="resultsHeading">Recorded Results</h2>
-                    <p>Ranked from the fastest lap time to the slowest.</p>
+                    <h2 id="resultsHeading">Lap results</h2>
+                    <p>Each row is one recorded lap. Use the filters to find results.</p>
                 </div>
+                <a class="export-results-button" href="{{exportUrl}}">Download CSV</a>
             </div>
             <form class="results-filter-bar" method="get" action="/results">
                 <div class="results-filter-field">
@@ -57,32 +45,82 @@
                     <input type="search" id="resultNameFilter" name="driver" value="{{driverFilter}}" placeholder="Search drivers..." autocomplete="off">
                 </div>
                 <div class="results-filter-field">
-                    <label for="resultDateFilter">Run date</label>
-                    <input type="date" id="resultDateFilter" name="date" value="{{dateFilter}}">
+                    <label for="resultVehicleFilter">Vehicle</label>
+                    <select id="resultVehicleFilter" name="vehicle">{{vehicleOptions}}</select>
                 </div>
                 <div class="results-filter-field">
-                    <label for="resultEventFilter">Event</label>
-                    <select id="resultEventFilter" name="event">{{eventOptions}}</select>
+                    <label for="resultDateFilter">Run date</label>
+                    <input type="date" id="resultDateFilter" name="date" value="{{dateFilter}}">
                 </div>
                 <button class="results-filter-submit" type="submit">Filter</button>
                 <a class="results-filter-clear" href="/results">Clear</a>
             </form>
-            <div class="results-table-scroll">
-                <table id="resultsTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Driver Name</th>
-                            <th>Best Time</th>
-                            <th>Date</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultsLeaderboardBody">{{resultsRows}}</tbody>
-                </table>
+            <div class="results-insights" aria-label="Result summary">
+                <article class="insight-card">
+                    <span>Recorded laps</span>
+                    <strong>{{resultCount}}</strong>
+                </article>
+                <article class="insight-card">
+                    <span>Drivers in view</span>
+                    <strong>{{driverCount}}</strong>
+                </article>
+                <article class="insight-card">
+                    <span>Fastest lap {{comparisonScope}}</span>
+                    <strong>{{fastestFilteredTime}}</strong>
+                </article>
             </div>
+
+            <section class="recorded-events-block" aria-labelledby="lapResultsHeading">
+                <div class="results-subheading recorded-runs-heading">
+                    <div>
+                        <h3 id="lapResultsHeading">Individual laps</h3>
+                        <p>Ranked by lap time. Select an event above to narrow the results.</p>
+                    </div>
+                </div>
+                <div class="results-table-scroll">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Driver Name</th>
+                                <th>Vehicle</th>
+                                <th>Lap Time</th>
+                                <th>Gap to Fastest</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsLeaderboardBody">{{resultsRows}}</tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="driverSummary" class="driver-standings-block" aria-labelledby="standingsHeading">
+                <div class="results-subheading">
+                    <div>
+                        <h3 id="standingsHeading">Driver summary</h3>
+                        <p>One row per driver in the filtered results, with their best and average lap.</p>
+                    </div>
+                </div>
+                <div class="results-table-scroll">
+                    <table id="driverStandingsTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Driver</th>
+                                <th>Vehicle</th>
+                                <th>Personal Best</th>
+                                <th>Runs</th>
+                                <th>Average Lap</th>
+                                <th>Gap to Leader</th>
+                            </tr>
+                        </thead>
+                        <tbody>{{driverStandingsRows}}</tbody>
+                    </table>
+                </div>
+            </section>
         </section>
 
-    </div>
+    </main>
 </body>
 </html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiveLap — Manage Events</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="results-page">
+    <nav aria-label="Main navigation">
+        <a class="site-brand" href="/" aria-label="LiveLap home">
+            <span class="brand-mark" aria-hidden="true">LL</span>
+            <span class="brand-copy">LiveLap<small>RC TIME ATTACK</small></span>
+        </a>
+        <div class="nav-links">
+            <a href="/">Timing Table</a>
+            <a href="/results">Results</a>
+            <a href="/events" aria-current="page">Manage Events</a>
+        </div>
+        {{eventSelector}}
+    </nav>
+
+    <main class="container">
+        <div class="header">
+            <h1>LIVELAP</h1>
+            <h2>MANAGE EVENTS</h2>
+            <p class="hero-caption">Create events and manage their driver rosters and cars.</p>
+        </div>
+
+        <section class="results-table-panel">
+            <div class="results-table-heading">
+                <div>
+                    <h2>Create an event</h2>
+                    <p>Each event is separate, including events held on the same date.</p>
+                </div>
+            </div>
+            {{eventNotice}}
+            <form method="post" action="/events" class="results-filter-bar">
+                <label class="results-filter-field">Event name
+                    <input name="name" maxlength="80" required placeholder="e.g. Saturday Qualifier">
+                </label>
+                <label class="results-filter-field">Event date
+                    <input name="date" type="date" required>
+                </label>
+                <button class="results-filter-submit" type="submit">Create event</button>
+            </form>
+
+            <section class="recorded-events-block" aria-labelledby="eventsHeading">
+                <div class="results-subheading">
+                    <div>
+                        <h3 id="eventsHeading">Events</h3>
+                        <p>The Active badge shows which event is currently selected.</p>
+                    </div>
+                </div>
+                <div class="results-table-scroll">
+                    <table id="eventsTable">
+                        <thead><tr><th>Event</th><th>Date</th><th>Drivers</th><th>Recorded Runs</th><th>Action</th></tr></thead>
+                        <tbody>{{eventRows}}</tbody>
+                    </table>
+                </div>
+            </section>
+
+            {{activeEventManagement}}
+        </section>
+    </main>
+</body>
+</html>

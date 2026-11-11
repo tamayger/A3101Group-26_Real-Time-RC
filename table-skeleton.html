@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LiveLap - Drift Time Trial</title>
+    <title>LiveLap — Real-Time Rock Crawling Leaderboard</title>
     <link rel="stylesheet" href="style.css">
     <script src="lap-time-input.js" defer></script>
 </head>
@@ -16,10 +16,17 @@
          NAVIGATION
     ========================== -->
 
-    <nav>
-        <a href="/">Home</a>
-        <a href="/leaderboard">Leaderboard</a>
-        <a href="/results">Results</a>
+    <nav aria-label="Main navigation">
+        <a class="site-brand" href="/" aria-label="LiveLap home">
+            <span class="brand-mark" aria-hidden="true">LL</span>
+            <span class="brand-copy">LiveLap<small>RC TIME ATTACK</small></span>
+        </a>
+        <div class="nav-links">
+            <a href="/">Timing Table</a>
+            <a href="/results">Results</a>
+            <a href="/events">Manage Events</a>
+        </div>
+        {{eventSelector}}
     </nav>
 
 
@@ -27,56 +34,33 @@
          MAIN CONTAINER
     ========================== -->
 
-    <div class="container">
+    <main class="container">
 
         <!-- HEADER -->
 
         <div class="header">
-            <h1>DRIFT TIME TRIAL</h1>
+            <h1>LIVELAP</h1>
             <h2>{{leaderboardPeriod}}</h2>
+            <p class="hero-caption">Live standings for real-time rock crawling trials.</p>
         </div>
 
-
-        <!-- =========================
-             DATA ENTRY
-        ========================== -->
-
-        <section id="data-entry">
-
-            <h2>DATA ENTRY</h2>
-            <p class="entry-description">Record a driver’s lap time, event, and run date.</p>
-
-            <form id="raceForm" method="post" action="/times">
-                <input type="hidden" name="returnTo" value="/leaderboard">
-                <div class="leaderboard-field">
-                    <label for="name">Driver name</label>
-                    <input type="text" id="name" name="name" placeholder="Enter driver name" autocomplete="name" required>
-                </div>
-
-                <div class="leaderboard-field">
-                    <label for="time">Lap time</label>
-                    <input type="text" id="time" name="time" placeholder="MM:SS.hh" inputmode="numeric" autocomplete="off" required>
-                    <small>Type digits only, e.g. 012345 becomes 01:23.45.</small>
-                </div>
-
-                <div class="leaderboard-field">
-                    <label for="event">Event name</label>
-                    <input type="text" id="event" name="eventName" placeholder="e.g. October Time Trial" required>
-                </div>
-
-                <div class="leaderboard-field">
-                    <label for="date">Run date</label>
-                    <input type="date" id="date" name="date" required>
-                </div>
-
-                <button type="submit">Add result</button>
-
-            </form>
-
-            <p id="message">{{formMessage}}</p>
-
+        <section class="race-overview" aria-label="Race overview">
+            <article class="overview-card">
+                <span class="overview-label">Recorded runs</span>
+                <strong>{{runCount}}</strong>
+                <small>{{driverCount}} drivers</small>
+            </article>
+            <article class="overview-card overview-fastest">
+                <span class="overview-label">Fastest lap</span>
+                <strong>{{fastestLap}}</strong>
+                <small>Best recorded time</small>
+            </article>
+            <article class="overview-card overview-event">
+                <span class="overview-label">Latest event</span>
+                <strong>{{currentEventName}}</strong>
+                <small class="event-status {{eventStatusClass}}"><span class="status-dot {{eventStatusClass}}" aria-hidden="true"></span>{{eventStatus}}</small>
+            </article>
         </section>
-
 
         <!-- =========================
              LEADERBOARD
@@ -85,33 +69,70 @@
         <section id="leaderboard">
 
             <div class="header">
-                        <h2>LEADERBOARD</h2>
+                <h2>LEADERBOARD</h2>
+                <div class="leaderboard-page-actions">
+                    <button class="open-entry-button" type="button" data-open-modal>Record a run</button>
+                    <span class="live-indicator" data-live-status><span aria-hidden="true"></span>Live · updates every 15 sec</span>
+                </div>
             </div>
 
 
+            <div class="table-scroll">
             <table>
 
                 <thead>
 
                     <tr>
                         <th>RANK</th>
-                        <th>TIME</th>
-                        <th>NAME</th>
-                        <th>DATE</th>
+                        <th>DRIVER NAME</th>
+                        <th>VEHICLE</th>
+                        <th>BEST LAP TIME</th>
+                        <th>PREVIOUS LAP</th>
+                        <th>TOTAL RUNS</th>
+                        <th>TIME DIFFERENCE</th>
                     </tr>
 
                 </thead>
 
 
-                <tbody id="leaderboardBody">
+                <tbody id="leaderboardBody" data-live-board>
                     {{leaderboardRows}}
                 </tbody>
 
             </table>
+            </div>
 
         </section>
 
-    </div>
+        <dialog id="entryModal" class="entry-modal" aria-labelledby="entryModalTitle">
+            <form class="admin-panel entry-form" id="raceForm" method="post" action="/times">
+                <input type="hidden" name="returnTo" value="/leaderboard">
+                <div class="modal-heading">
+                    <div>
+                        <p class="section-kicker">RACE CONTROL</p>
+                        <h2 id="entryModalTitle"><span class="entry-title-prefix">Record lap times for</span> <strong>{{activeEventName}}</strong></h2>
+                    </div>
+                    <button class="modal-close" type="button" data-close-modal aria-label="Close form">×</button>
+                </div>
+                <div class="run-entry-form-content">
+                    <div class="run-entry-controls">
+                        <label for="lapGroup">Lap group</label>
+                        <select id="lapGroup" name="lapGroup" required>{{lapGroupOptions}}</select>
+                    <small>Enter a time for each driver in this lap group.</small>
+                    </div>
+                    <div class="run-entry-table-scroll">
+                        <table id="runEntryTable">
+                            <thead><tr><th>Driver</th><th>Car</th><th>Lap time</th></tr></thead>
+                            <tbody>{{runEntryRows}}</tbody>
+                        </table>
+                    </div>
+                    <button id="addTimeBtn" type="submit" {{runSubmitDisabled}}>Submit lap times</button>
+                </div>
+                <p id="message" class="form-message" role="status">{{formMessage}}</p>
+            </form>
+        </dialog>
+
+    </main>
 
 
 </body>
