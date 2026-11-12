@@ -7,39 +7,77 @@ const app = express();
 const port = process.env.PORT || 3000;
 const templateCache = new Map();
 
-const initialRuns = [
-    { time: "00:24.53", name: "TYRESE MARIANO", vehicle: "Yokomo YD-2", date: "2026-SEP-06", createdAt: "2026-09-06T14:22:00.000Z", eventName: "September Drift Cup" },
-    { time: "00:25.31", name: "TYRESE MARIANO", vehicle: "Yokomo YD-2", date: "2026-SEP-06", createdAt: "2026-09-06T14:24:00.000Z", eventName: "September Drift Cup" },
-    { time: "01:23.16", name: "RICARDO MARMOL", vehicle: "MST RMX 2.5", date: "2026-SEP-06", createdAt: "2026-09-06T14:18:00.000Z", eventName: "September Drift Cup" },
-    { time: "01:25.40", name: "RICARDO MARMOL", vehicle: "MST RMX 2.5", date: "2026-SEP-06", createdAt: "2026-09-06T14:20:00.000Z", eventName: "September Drift Cup" },
-    { time: "01:32.62", name: "ANTHONY BERNALES", vehicle: "Tamiya TT-02", date: "2026-SEP-06", createdAt: "2026-09-06T14:14:00.000Z", eventName: "September Drift Cup" },
-    { time: "02:04.08", name: "JONATHAN BACANI", vehicle: "Yokomo YD-2", date: "2026-SEP-01", createdAt: "2026-09-01T13:45:00.000Z", eventName: "September Drift Cup" }
+const initialEvents = [
+    { id: "event-morning-qualifier", name: "Saturday Morning Qualifier", date: "2026-11-07", status: "completed" },
+    { id: "event-afternoon-finals", name: "Saturday Afternoon Finals", date: "2026-11-07", status: "completed" },
+    { id: "event-sunday-practice", name: "Sunday Club Practice", date: "2026-11-08", status: "completed" }
+];
+
+const initialParticipants = [
+    { eventId: "event-morning-qualifier", driverId: "driver-alex-qualifier", name: "ALEX RIVERA", vehicle: "Yokomo YD-2Z" },
+    { eventId: "event-morning-qualifier", driverId: "driver-bea-qualifier", name: "BEA SANTOS", vehicle: "MST RMX 2.5" },
+    { eventId: "event-morning-qualifier", driverId: "driver-carlos-qualifier", name: "CARLOS REYES", vehicle: "Sakura D5S" },
+    { eventId: "event-morning-qualifier", driverId: "driver-dani-qualifier", name: "DANI FLORES", vehicle: "Tamiya TT-02" },
+    { eventId: "event-afternoon-finals", driverId: "driver-alex-finals", name: "ALEX RIVERA", vehicle: "MST RMX 2.5" },
+    { eventId: "event-afternoon-finals", driverId: "driver-emery-finals", name: "EMERY LIM", vehicle: "Yokomo RD 2.0" },
+    { eventId: "event-afternoon-finals", driverId: "driver-faye-finals", name: "FAYE MENDOZA", vehicle: "Reve D RDX" },
+    { eventId: "event-sunday-practice", driverId: "driver-bea-practice", name: "BEA SANTOS", vehicle: "MST RMX 2.5" },
+    { eventId: "event-sunday-practice", driverId: "driver-gio-practice", name: "GIO NAVARRO", vehicle: "Yokomo YD-2Z" },
+    { eventId: "event-sunday-practice", driverId: "driver-hana-practice", name: "HANA CRUZ", vehicle: "Tamiya TT-02" }
+];
+
+const initialLapTimes = [
+    ["event-morning-qualifier", 1, "driver-alex-qualifier", "00:24.53"],
+    ["event-morning-qualifier", 1, "driver-bea-qualifier", "00:25.12"],
+    ["event-morning-qualifier", 1, "driver-carlos-qualifier", "00:26.48"],
+    ["event-morning-qualifier", 1, "driver-dani-qualifier", "00:27.01"],
+    ["event-morning-qualifier", 2, "driver-alex-qualifier", "00:23.98"],
+    ["event-morning-qualifier", 2, "driver-bea-qualifier", "N/A"],
+    ["event-morning-qualifier", 2, "driver-carlos-qualifier", "00:25.84"],
+    ["event-morning-qualifier", 2, "driver-dani-qualifier", "00:26.75"],
+    ["event-morning-qualifier", 3, "driver-alex-qualifier", "00:23.61"],
+    ["event-morning-qualifier", 3, "driver-bea-qualifier", "00:24.76"],
+    ["event-morning-qualifier", 3, "driver-carlos-qualifier", "00:25.32"],
+    ["event-morning-qualifier", 3, "driver-dani-qualifier", "N/A"],
+    ["event-afternoon-finals", 1, "driver-alex-finals", "00:22.94"],
+    ["event-afternoon-finals", 1, "driver-emery-finals", "00:24.18"],
+    ["event-afternoon-finals", 1, "driver-faye-finals", "00:25.41"],
+    ["event-afternoon-finals", 2, "driver-alex-finals", "00:22.71"],
+    ["event-afternoon-finals", 2, "driver-emery-finals", "00:23.96"],
+    ["event-afternoon-finals", 2, "driver-faye-finals", "00:24.88"],
+    ["event-afternoon-finals", 3, "driver-alex-finals", "00:22.58"],
+    ["event-afternoon-finals", 3, "driver-emery-finals", "N/A"],
+    ["event-afternoon-finals", 3, "driver-faye-finals", "00:24.52"],
+    ["event-sunday-practice", 1, "driver-bea-practice", "00:25.07"],
+    ["event-sunday-practice", 1, "driver-gio-practice", "00:26.19"],
+    ["event-sunday-practice", 1, "driver-hana-practice", "00:27.42"],
+    ["event-sunday-practice", 2, "driver-bea-practice", "00:24.81"],
+    ["event-sunday-practice", 2, "driver-gio-practice", "N/A"],
+    ["event-sunday-practice", 2, "driver-hana-practice", "00:26.90"]
 ];
 
 const dataDirectory = path.join(__dirname, "data");
 const dataFile = path.join(dataDirectory, "livelap.json");
 
 function createInitialData() {
-    const event = { id: crypto.randomUUID(), name: "September Drift Cup", date: "2026-09-06", status: "completed" };
-    const drivers = [];
-    const eventDrivers = [];
-    const byName = new Map();
-    const lapAttempts = new Map();
-    const runs = initialRuns.map((run) => {
-        const name = run.name.toLocaleUpperCase();
-        if (!byName.has(name)) {
-            const driver = { id: crypto.randomUUID(), name };
-            byName.set(name, driver);
-            drivers.push(driver);
-            eventDrivers.push({ eventId: event.id, driverId: driver.id, vehicle: run.vehicle });
-        }
-        const driverId = byName.get(name).id;
-        const lapGroup = (lapAttempts.get(driverId) || 0) + 1;
-        lapAttempts.set(driverId, lapGroup);
-        return { id: crypto.randomUUID(), eventId: event.id, driverId, lapGroup,
-            vehicle: run.vehicle, time: run.time, date: normalizeDate(run.date), createdAt: run.createdAt };
+    const drivers = new Map();
+    const eventDrivers = initialParticipants.map(({ eventId, driverId, name, vehicle }) => {
+        drivers.set(driverId, { id: driverId, name });
+        return { eventId, driverId, vehicle, active: true };
     });
-    return { events: [event], drivers, eventDrivers, runs };
+    const participants = new Map(initialParticipants.map((participant) => [participant.driverId, participant]));
+    const eventDates = new Map(initialEvents.map((event) => [event.id, event.date]));
+    const runs = initialLapTimes.map(([eventId, lapGroup, driverId, time], index) => ({
+        id: `seed-run-${String(index + 1).padStart(3, "0")}`,
+        eventId,
+        driverId,
+        lapGroup,
+        vehicle: participants.get(driverId).vehicle,
+        time,
+        date: eventDates.get(eventId),
+        createdAt: `${eventDates.get(eventId)}T09:${String(index % 60).padStart(2, "0")}:00.000Z`
+    }));
+    return { events: initialEvents.map((event) => ({ ...event })), drivers: [...drivers.values()], eventDrivers, runs };
 }
 
 function loadData() {
@@ -906,3 +944,4 @@ if (require.main === module) {
 }
 
 module.exports = app;
+module.exports.createInitialData = createInitialData;

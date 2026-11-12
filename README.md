@@ -21,7 +21,9 @@ npm run dev
 
 Open <http://localhost:3000>. Use `npm start` to start the server without watch mode.
 
-The server creates `data/livelap.json` on first start and saves events, event-specific drivers and car assignments, and lap records there. The file is excluded from Git; back it up to preserve data.
+The repository includes `data/livelap.json` as a starter dataset. The server saves events, event-specific drivers and car assignments, and lap records in that file. To replace its contents with the sample dataset, run `npm run seed`; this overwrites the current local records.
+
+The sample dataset includes multiple events on the same date, repeated driver names registered separately per event, assigned cars, three lap groups, and `N/A` lap times.
 
 ## Event and lap workflow
 
