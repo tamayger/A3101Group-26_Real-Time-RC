@@ -7,7 +7,7 @@ MO-IT161 WebSys project by Group 26.
 - [Application Development Workflow Worksheet](https://docs.google.com/spreadsheets/d/1iUyWg36QpM2X0yW6WAh0VGKIu0lDrgFqWg09OUgTDbw/edit?usp=sharing)
 - [AI Use Statement](https://docs.google.com/document/d/19dcvzPnw1qQBOc0uKe4zs28718Dlk8O6pGhdIxkrCzg/edit?usp=sharing)
 - [Static site demo](https://tamayger.github.io/A3101Group-26_Real-Time-RC/The%20Data%20Entry.html)
-
+- [Functional Testing Workbook] (https://docs.google.com/spreadsheets/d/15Z6NnbOzCtXBRyumJwtgNG7q1ab1pjIjEJ3qSDWx_Rk/edit?usp=sharing)
 Event and run management requires the Express server; the static demo does not save data.
 
 ## Run locally
